@@ -1,6 +1,6 @@
 # Deploy do SmartCart no Render
 
-O repositório já contém um Blueprint em `render.yaml`. No painel do Render, crie um novo Web Service a partir de `ianmartins-iftm/smartcart-MVP`, selecione a branch `main` e use o Blueprint para aplicar a configuração. O serviço usa o plano gratuito, executa `pnpm install --frozen-lockfile && pnpm run build`, inicia com `pnpm start` e verifica a disponibilidade em `/health`. O build não executa `corepack enable`, porque o filesystem de build do Render pode ser somente leitura; o pnpm já é disponibilizado pelo ambiente Node do Render.
+O repositório já contém um Blueprint em `render.yaml`. No painel do Render, crie um novo Web Service a partir de `ianmartins-iftm/smartcart-MVP`, selecione a branch `main` e use o Blueprint para aplicar a configuração. O serviço usa o plano gratuito, instala o pnpm 10.4.1 via `npx`, executa `pnpm install --frozen-lockfile && pnpm run build`, inicia diretamente com `node dist/index.js` e verifica a disponibilidade em `/health`. Essa abordagem evita tanto o filesystem somente leitura quanto o problema de assinatura do Corepack observado no Render.
 
 O aplicativo escuta em `0.0.0.0` e usa a porta fornecida pelo Render em `PORT`. Não é necessário cadastrar `PORT` manualmente. `NODE_ENV=production` já está definido no Blueprint.
 

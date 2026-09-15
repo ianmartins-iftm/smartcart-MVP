@@ -3,8 +3,8 @@ services:
     name: smartcart
     runtime: node
     plan: free
-    buildCommand: pnpm install --frozen-lockfile && pnpm run build
-    startCommand: pnpm start
+    buildCommand: npx --yes pnpm@10.4.1 install --frozen-lockfile && npx --yes pnpm@10.4.1 run build
+    startCommand: node dist/index.js
     healthCheckPath: /health
     envVars:
       - key: NODE_ENV
