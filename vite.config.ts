@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import react from "@vitejs/plugin-react";
 import { defineConfig, type Plugin, type ViteDevServer } from "vite";
 
 // =============================================================================
@@ -199,7 +200,11 @@ function vitePluginStorageProxy(): Plugin {
   };
 }
 
-const plugins = [vitePluginManusDebugCollector(), vitePluginStorageProxy()];
+const plugins = [
+  react(),
+  vitePluginManusDebugCollector(),
+  vitePluginStorageProxy(),
+];
 
 export default defineConfig({
   plugins,
