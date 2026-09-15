@@ -91,22 +91,30 @@ const FORGE_BASE_URL =
   import.meta.env.VITE_FRONTEND_FORGE_API_URL ||
   "https://forge.butterfly-effect.dev";
 const MAPS_PROXY_URL = `${FORGE_BASE_URL}/v1/maps/proxy`;
+let mapScriptPromise: Promise<boolean> | null = null;
 
 function loadMapScript() {
-  return new Promise(resolve => {
+  if (!API_KEY) return Promise.resolve(false);
+  if (window.google?.maps) return Promise.resolve(true);
+  if (mapScriptPromise) return mapScriptPromise;
+
+  mapScriptPromise = new Promise<boolean>(resolve => {
     const script = document.createElement("script");
     script.src = `${MAPS_PROXY_URL}/maps/api/js?key=${API_KEY}&v=weekly&libraries=marker,places,geocoding,geometry`;
     script.async = true;
     script.crossOrigin = "anonymous";
     script.onload = () => {
-      resolve(null);
+      resolve(Boolean(window.google?.maps));
       script.remove(); // Clean up immediately
     };
     script.onerror = () => {
       console.error("Failed to load Google Maps script");
+      resolve(false);
     };
     document.head.appendChild(script);
   });
+
+  return mapScriptPromise;
 }
 
 interface MapViewProps {
@@ -126,7 +134,11 @@ export function MapView({
   const map = useRef<google.maps.Map | null>(null);
 
   const init = usePersistFn(async () => {
-    await loadMapScript();
+    const isMapAvailable = await loadMapScript();
+    if (!isMapAvailable || !window.google?.maps) {
+      console.warn("Google Maps is unavailable; map rendering is disabled.");
+      return;
+    }
     if (!mapContainer.current) {
       console.error("Map container not found");
       return;
