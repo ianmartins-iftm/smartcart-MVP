@@ -66,8 +66,8 @@ function StoreMap({ route, currentIndex }: { route: RouteItem[]; currentIndex: n
     Padaria: [180, 82],
     Laticínios: [285, 82],
     Cereais: [180, 190],
-    Mercearia: [285, 250],
-    Açougue: [78, 250],
+    Mercearia: [285, 190],
+    Açougue: [78, 190],
   };
   const points = route.map((item, index) => {
     const [baseX, baseY] = categoryPoints[item.product.category] ?? [180, 190];
